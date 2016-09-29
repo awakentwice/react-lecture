@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title></title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react/0.14.0/react.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react/0.14.0/react-dom.js"></script>
+    <script src="browser.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="index.css">
+  </head>
+  <body>
+    <div id="id"></div>
+    <script type="text/javascript" src='contacts.js'></script>
+
+
+    <script type="text/babel">
+
+      class Contact extends React.Component {
+        render(){
+          return (
+            <li className="contact">
+              <img className="contact-image" src={this.props.imgSrc} />
+              <div>
+                <div className='contact-name'>{this.props.name}</div>
+                <div className='contact-number'>{this.props.number}</div>
+              </div>
+            </li>
+          )
+        }
+      }
+
+      class ContactList extends React.Component {
+        constructor(){
+          super()
+          this.state = {
+            contactList: CONTACTS
+          }
+        }
+
+        handleChange(e){
+          let searchValue = e.target.value.trim().toLowerCase();
+          let filteredContacts = CONTACTS.filter(function(contact){
+            let contactName = contact.name.toLowerCase();
+            return contactName.indexOf(searchValue) !== -1;
+          })
+
+          this.setState({
+            contactList: filteredContacts
+          })
+        }
+
+        render() {
+          return(
+            <div className="contacts">
+              <input className="search-field" onChange={this.handleChange.bind(this)}/>
+              <ul className='contact-list'>
+                {
+                  this.state.contactList.map(function(contact){
+                    return (
+                      <Contact
+                        key={contact.id}
+                        name={contact.name}
+                        number={contact.number}
+                        imgSrc={contact.imgSrc}
+                      />
+                    )
+                  })
+                }
+              </ul>
+            </div>
+          )
+        }
+      }
+
+      ReactDOM.render(
+        <ContactList />,
+        document.getElementById('id')
+      );
+
+    </script>
+  </body>
+</html>
